@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrthoBoost - Brand Persona Clusters</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦷</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #29bbf6 0%, #163055 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 4px solid #29bbf6;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+        
+        .logo-icon {
+            font-size: 48px;
+        }
+        
+        h1 {
+            color: #163055;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            color: #163055;
+            opacity: 0.8;
+            font-size: 1.1em;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8fdff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 2px solid #79efe1;
+        }
+        
+        .control-label {
+            font-weight: 600;
+            color: #163055;
+            font-size: 14px;
+        }
+        
+        .filter-button {
+            padding: 8px 16px;
+            border: 2px solid #79efe1;
+            background: white;
+            color: #163055;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-button:hover {
+            border-color: #29bbf6;
+            color: #29bbf6;
+        }
+        
+        .filter-button.active {
+            background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%);
+            color: white;
+            border-color: #29bbf6;
+        }
+        
+        .action-button {
+            padding: 10px 20px;
+            border: 2px solid #29bbf6;
+            background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .action-button:hover {
+            background: #79efe1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, rgba(41, 187, 246, 0.1) 0%, rgba(121, 239, 225, 0.1) 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #29bbf6;
+        }
+        
+        .info-box h3 {
+            color: #163055;
+            margin-bottom: 10px;
+        }
+        
+        .info-box p {
+            color: #163055;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+        
+        #visualization {
+            background: #f8fdff;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 800px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #29bbf6;
+            font-size: 18px;
+        }
+        
+        .error {
+            background: #fed7d7;
+            border: 2px solid #fc8181;
+            padding: 20px;
+            border-radius: 10px;
+            color: #742a2a;
+            margin: 20px 0;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 1000;
+            max-width: 350px;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .cluster-circle {
+            transition: all 0.3s ease;
+        }
+        
+        .cluster-circle.dimmed {
+            opacity: 0.2;
+        }
+        
+        .cluster-label {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .cluster-label:hover {
+            font-size: 16px;
+        }
+        
+        .persona-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .persona-node.selected {
+            filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.8));
+        }
+        
+        .persona-node.dimmed {
+            opacity: 0.2;
+        }
+        
+        .persona-node:hover {
+            filter: brightness(1.2) drop-shadow(0 0 8px rgba(0, 0, 0, 0.3));
+        }
+        
+        .link {
+            stroke: #cbd5e0;
+            stroke-opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        
+        .link.strong {
+            stroke: #29bbf6;
+            stroke-width: 4px;
+            stroke-opacity: 0.9;
+        }
+        
+        .link.medium {
+            stroke: #a0aec0;
+            stroke-width: 3px;
+            stroke-opacity: 0.7;
+        }
+        
+        .link.weak {
+            stroke: #e2e8f0;
+            stroke-width: 2px;
+            stroke-opacity: 0.5;
+        }
+        
+        .link.dimmed {
+            opacity: 0.1;
+        }
+        
+        .link.highlighted {
+            stroke-width: 5px;
+            stroke-opacity: 1;
+        }
+        
+        .stats-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(41, 187, 246, 0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            background: #f8fdff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #29bbf6;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: #163055;
+            margin-top: 5px;
+        }
+        
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(41, 187, 246, 0.1);
+            border: 2px solid rgba(41, 187, 246, 0.2);
+        }
+        
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #163055;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .zoom-controls {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(41, 187, 246, 0.2);
+            border: 2px solid #79efe1;
+        }
+        
+        .zoom-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        
+        .zoom-button:hover {
+            background: #79efe1;
+            transform: scale(1.1);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(22, 48, 85, 0.9);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 2% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 1200px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s ease;
+            max-height: 90vh;
+            overflow: auto;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%);
+            padding: 30px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.8em;
+        }
+        
+        .modal-close {
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            line-height: 1;
+            padding: 0 10px;
+        }
+        
+        .modal-close:hover {
+            transform: rotate(90deg);
+            opacity: 0.8;
+        }
+        
+        .modal-body {
+            padding: 40px;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .detail-section {
+            background: linear-gradient(135deg, rgba(41, 187, 246, 0.05) 0%, rgba(121, 239, 225, 0.05) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #29bbf6;
+        }
+        
+        .detail-section h3 {
+            color: #163055;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .detail-section p {
+            color: #163055;
+            line-height: 1.7;
+            white-space: pre-line;
+            opacity: 0.9;
+        }
+        
+        .design-tabs {
+            background: #f8fdff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 2px solid rgba(41, 187, 246, 0.2);
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-button {
+            padding: 12px 20px;
+            border: 2px solid #79efe1;
+            background: white;
+            color: #163055;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button:hover {
+            border-color: #29bbf6;
+            transform: translateY(-2px);
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%);
+            color: white;
+            border-color: #29bbf6;
+        }
+        
+        .tab-content {
+            min-height: 200px;
+        }
+        
+        .tab-pane {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            color: #163055;
+            line-height: 1.8;
+            white-space: pre-line;
+            box-shadow: 0 2px 10px rgba(41, 187, 246, 0.1);
+        }
+        
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-footer {
+            padding: 20px 40px 40px 40px;
+            text-align: center;
+        }
+        
+        .modal-footer .action-button {
+            display: inline-block;
+            text-decoration: none;
+            padding: 15px 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <span class="logo-icon">🦷</span>
+                <div class="logo">OrthoBoost</div>
+            </div>
+            <h1>Brand Persona Clusters</h1>
+            <p class="subtitle">Interactive visualization of orthodontic practice personas and their relationships</p>
+        </div>
+        
+        <div class="info-box">
+            <h3>🎮 How to Use This Tool</h3>
+            <p><strong>Click a persona circle</strong> to highlight its connections and see detailed relationship statistics</p>
+            <p><strong>Filter by overlap strength</strong> to focus on Strong (80%), Medium (50%), or Weak (30%) relationships</p>
+            <p><strong>Zoom and pan</strong> with your mouse wheel and drag to explore clusters in detail</p>
+            <p><strong>Hover over elements</strong> for detailed information about characteristics and shared traits</p>
+        </div>
+        
+        <div id="loading" class="loading">⏳ Loading OrthoBoost visualization...</div>
+        <div id="error-message" class="error" style="display: none;"></div>
+        
+        <div id="controls" style="display: none;">
+            <div class="controls">
+                <div class="control-group">
+                    <span class="control-label">Show Overlaps:</span>
+                    <button class="filter-button active" data-filter="all">All</button>
+                    <button class="filter-button" data-filter="strong">Strong</button>
+                    <button class="filter-button" data-filter="medium">Medium</button>
+                    <button class="filter-button" data-filter="weak">Weak</button>
+                </div>
+                <button class="action-button" onclick="resetView()">🔄 Reset View</button>
+                <button class="action-button" onclick="toggleLabels()">🏷️ Toggle Labels</button>
+            </div>
+        </div>
+        
+        <div id="visualization"></div>
+        
+        <div id="stats" class="stats-panel" style="display: none;">
+            <h3>📊 Current Selection Stats</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-connections">0</div>
+                    <div class="stat-label">Direct Connections</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-strong">0</div>
+                    <div class="stat-label">Strong Overlaps</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-medium">0</div>
+                    <div class="stat-label">Medium Overlaps</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-weak">0</div>
+                    <div class="stat-label">Weak Overlaps</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-title">Persona Categories & Overlap Strengths</div>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3182ce;"></div>
+                    <span>Budget/Accessible</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #38a169;"></div>
+                    <span>Family-Focused</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #805ad5;"></div>
+                    <span>Cosmetic/Aesthetic</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #d69e2e;"></div>
+                    <span>Clinical/Scientific</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #48bb78;"></div>
+                    <span>Wellness/Education</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #29bbf6; width: 40px; height: 4px;"></div>
+                    <span><strong>Strong Overlap:</strong> 80% similarity</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #79efe1; width: 40px; height: 3px;"></div>
+                    <span><strong>Medium Overlap:</strong> 50% similarity</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #a0aec0; width: 40px; height: 2px;"></div>
+                    <span><strong>Weak Overlap:</strong> 30% similarity</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer" style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid rgba(41, 187, 246, 0.2); color: #163055; opacity: 0.7; font-size: 14px;">
+            <strong>OrthoBoost</strong> Brand Persona Analysis Tool • Click personas to explore relationships
+        </div>
+    </div>
+
+    <script>
+        // Load D3.js dynamically
+        function loadD3() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js';
+                script.onload = () => {
+                    if (typeof d3 !== 'undefined') {
+                        console.log('D3.js loaded successfully');
+                        resolve();
+                    } else {
+                        reject(new Error('D3.js loaded but not available'));
+                    }
+                };
+                script.onerror = () => {
+                    const altScript = document.createElement('script');
+                    altScript.src = 'https://unpkg.com/d3@7.8.5/dist/d3.min.js';
+                    altScript.onload = () => {
+                        if (typeof d3 !== 'undefined') {
+                            console.log('D3.js loaded from alternative CDN');
+                            resolve();
+                        } else {
+                            reject(new Error('D3.js not available from any CDN'));
+                        }
+                    };
+                    altScript.onerror = () => reject(new Error('Failed to load D3.js'));
+                    document.head.appendChild(altScript);
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // Persona data
+        const personas = [
+            {
+                id: 1,
+                name: "Budget-Friendly",
+                fullName: "Dr. A. Joe - Budget-Friendly Everyday Ortho",
+                color: "#3182ce",
+                category: "Budget/Accessible",
+                characteristics: ["value-driven", "promotional", "accessible", "bright-colors", "direct-cta"]
+            },
+            {
+                id: 2,
+                name: "Family Community",
+                fullName: "Dr. Joey - Family-Focused Community Ortho",
+                color: "#38a169",
+                category: "Family-Focused",
+                characteristics: ["family-oriented", "warm-friendly", "community", "multi-generational", "trust"]
+            },
+            {
+                id: 3,
+                name: "Adult Cosmetic",
+                fullName: "Adult Cosmetic-Focused Aesthetic Ortho",
+                color: "#805ad5",
+                category: "Cosmetic/Aesthetic",
+                characteristics: ["sleek-minimal", "professional", "cosmetic-results", "urban", "aspirational"]
+            },
+            {
+                id: 4,
+                name: "Clinical Expertise",
+                fullName: "Dr. Joesph - High-Expertise Clinical Ortho",
+                color: "#d69e2e",
+                category: "Clinical/Scientific",
+                characteristics: ["credentials", "clinical-authority", "results-driven", "technical", "expertise"]
+            },
+            {
+                id: 5,
+                name: "Premium Family",
+                fullName: "Premium Family Ortho",
+                color: "#2f855a",
+                category: "Family-Focused",
+                characteristics: ["polished", "family-oriented", "elevated", "technology", "outcomes"]
+            },
+            {
+                id: 6,
+                name: "Wellness Educator",
+                fullName: "The Wellness Educator",
+                color: "#48bb78",
+                category: "Wellness/Education",
+                characteristics: ["educational", "natural", "empowerment", "holistic", "root-cause"]
+            },
+            {
+                id: 7,
+                name: "Luxury Wellness",
+                fullName: "Luxury Wellness Practice",
+                color: "#9f7aea",
+                category: "Cosmetic/Aesthetic",
+                characteristics: ["spa-like", "premium", "serene", "luxury", "elevated"]
+            },
+            {
+                id: 8,
+                name: "Science-Driven",
+                fullName: "Science-Driven Holistic Clinic",
+                color: "#dd6b20",
+                category: "Clinical/Scientific & Wellness",
+                characteristics: ["research-backed", "diagnostic", "clinical-natural", "functional", "systems-based"]
+            }
+        ];
+        // Detailed persona data from spreadsheet
+        const personasDetail = {
+            "1": {
+                        "id": 1,
+                        "doctor_name": "Dr. A. Joe",
+                        "name": "Budget-Friendly Everyday Ortho",
+                        "positioning": "Practical, straightforward, cost-conscious. Focuses heavily on affordability, convenience, and accessibility.",
+                        "messaging": "Leads with price, financing, and convenience\n\u201cAffordable,\u201d \u201cFlexible,\u201d \u201cHassle-Free\u201d\nAvoids overly clinical or luxurious language",
+                        "patient_base": "Budget-conscious families\nMixed ages\nValue shoppers",
+                        "example_clients": "EP\nTennessee",
+                        "examples_wild": "https://www.biltmoredentalcenter.com/",
+                        "copy_dos_donts": "",
+                        "moodboard_link": "",
+                        "typography": "Sans-Serif Fonts: Open Sans, Roboto, Lato\nWeight: Regular to Semi-Bold\nStyle: Clear, highly readable, straightforward\nHierarchy: Simple, no decorative elements",
+                        "imagery": "\u2022 Real families in everyday settings\n\u2022 Diverse age groups together\n\u2022 Casual clothing, natural smiles\n\u2022 Local community vibes\n\u2022 Before/after when emphasizing value\n\u2022 Stock photos OK if authentic-looking",
+                        "layout": "\u2022 Efficient use of space - minimal waste\n\u2022 Grid-based, organized\n\u2022 Clear visual hierarchy\n\u2022 CTA prominent and easy to find\n\u2022 Information-dense but not cluttered\n\u2022 Mobile-first thinking",
+                        "visual_tone": "\u2022 Practical and no-nonsense\n\u2022 Approachable and friendly\n\u2022 Trustworthy without being fancy\n\u2022 Direct and honest\n\u2022 Value-focused",
+                        "iconography": "\u2022 Simple line icons\n\u2022 Dollar signs, calendars, checkmarks\n\u2022 Location pins\n\u2022 Clear, functional symbols\n\u2022 No overly decorative elements",
+                        "texture": "\u2022 Minimal textures\n\u2022 Flat or subtle gradients\n\u2022 Clean backgrounds\n\u2022 Occasional paper texture for warmth\n\u2022 Avoid heavy patterns",
+                        "design_principles": "\u2022 Clarity over creativity\n\u2022 Accessibility first\n\u2022 Price/value prominently featured\n\u2022 Easy-to-scan information\n\u2022 Strong CTAs\n\u2022 Functional > Fancy",
+                        "avoid": "\u2022 Luxury aesthetics\n\u2022 Overly minimal/sparse layouts\n\u2022 Complex typography\n\u2022 Abstract imagery\n\u2022 Excessive white space\n\u2022 Premium color palettes (golds, deep purples)"
+            },
+            "2": {
+                        "id": 2,
+                        "doctor_name": "Dr. Joey",
+                        "name": "Family-Focused Community Ortho",
+                        "positioning": "Warm, welcoming, approachable. The \u201clocal favorite\u201d that takes care of kids, teens, and parents.",
+                        "messaging": "Leads with comfort, trust, and family care\nBalanced budget messaging\nAvoids overly serious or premium language",
+                        "patient_base": "Families with kids & teens\nRural + suburban markets\nCommunity-driven parents",
+                        "example_clients": "Aloha\nMeason",
+                        "examples_wild": "https://www.biltmoredentalcenter.com/",
+                        "copy_dos_donts": "",
+                        "moodboard_link": "",
+                        "typography": "Sans-Serif: Nunito, Poppins, Quicksand\nWeight: Regular to Bold\nStyle: Rounded, friendly, welcoming\nPersonality: Warm without being childish",
+                        "imagery": "\u2022 Multi-generational families\n\u2022 Kids AND parents featured equally\n\u2022 Community events, local settings\n\u2022 Candid, genuine moments\n\u2022 Small-town/neighborhood vibes\n\u2022 Group shots, togetherness\n\u2022 Natural outdoor settings",
+                        "layout": "\u2022 Balanced and welcoming\n\u2022 Not too tight, not too sparse\n\u2022 Friendly frame and borders\n\u2022 Photos take center stage\n\u2022 Warm, inviting negative space\n\u2022 Symmetrical or near-symmetrical",
+                        "visual_tone": "\u2022 Warm and neighborly\n\u2022 Trusted family friend\n\u2022 Supportive and caring\n\u2022 Community-minded\n\u2022 Generational appeal",
+                        "iconography": "\u2022 Soft, rounded icons\n\u2022 Families, homes, hearts\n\u2022 Calendar/appointment symbols\n\u2022 Community symbols\n\u2022 Slightly more playful than clinical",
+                        "texture": "\u2022 Soft, organic textures\n\u2022 Light wood grain\n\u2022 Subtle patterns (dots, gentle waves)\n\u2022 Paper/craft elements (sparingly)\n\u2022 Warm overlays",
+                        "design_principles": "\u2022 Warmth in every element\n\u2022 Inclusive design (all ages)\n\u2022 Community connection visible\n\u2022 Trust-building through familiarity\n\u2022 Balanced professional + personal\n\u2022 Comfort emphasized",
+                        "avoid": "\u2022 Too corporate/clinical\n\u2022 Cold color schemes\n\u2022 Overly polished/studio photography\n\u2022 Exclude any age group\n\u2022 Ultra-modern minimalism\n\u2022 Intimidating medical imagery\n\u2022 Aesthetic before/afters"
+            },
+            "3": {
+                        "id": 3,
+                        "doctor_name": "",
+                        "name": "Adult Cosmetic-Focused Aesthetic Ortho",
+                        "positioning": "Modern, aesthetic, image-conscious. Appeals to professionals and adults who want subtle, cosmetic-forward treatment.",
+                        "messaging": "Leads with cosmetic results, discreet options, expertise\nPrice is secondary\nAvoids kid-focused messaging",
+                        "patient_base": "Adults 25\u201355\nCosmetic-driven patients\nProfessionals",
+                        "example_clients": "Mackenzie\nSmiles",
+                        "examples_wild": "https://www.docriano.com/",
+                        "copy_dos_donts": "",
+                        "moodboard_link": "",
+                        "typography": "Modern Sans-Serif: Montserrat, Avenir, Proxima Nova\nWeight: Light to Medium (elegant, not heavy)\nStyle: Sleek, sophisticated, minimal\nOptional: Elegant Serif for headlines (Playfair, Cormorant)",
+                        "imagery": "\u2022 Adults 25-55 in professional settings\n\u2022 Subtle smile close-ups\n\u2022 Lifestyle shots (work, social, dating)\n\u2022 Minimal visibility of appliances\n\u2022 Before/after focus on aesthetic improvement\n\u2022 Black & white or muted color grades\n\u2022 Urban, modern environments",
+                        "layout": "\u2022 Generous white space\n\u2022 Asymmetric, modern layouts\n\u2022 Minimalist compositions\n\u2022 Strong focal points\n\u2022 High contrast\n\u2022 Clean lines and edges\n\u2022 Magazine editorial feel",
+                        "visual_tone": "\u2022 Sophisticated and confident\n\u2022 Discreet and subtle\n\u2022 Aspirational but achievable\n\u2022 Professional and modern\n\u2022 Image-conscious without vanity",
+                        "iconography": "\u2022 Minimal line icons\n\u2022 Geometric shapes\n\u2022 Subtle/invisible aligner imagery\n\u2022 Lips, smile outlines (abstract)\n\u2022 Professional briefcase, coffee cup symbols\n\u2022 Ultra-thin line weights",
+                        "texture": "\u2022 Smooth, clean surfaces\n\u2022 Subtle gradients (gray to white)\n\u2022 Marble or concrete textures (subtle)\n\u2022 Metallic sheens (gold/rose gold)\n\u2022 Avoid busy patterns entirely",
+                        "design_principles": "\u2022 Less is more\n\u2022 Sophistication through restraint\n\u2022 Cosmetic focus, never clinical\n\u2022 Lifestyle integration\n\u2022 Discretion emphasized\n\u2022 Quality materials/finishes visible",
+                        "avoid": "\u2022 Bright, playful colors\n\u2022 Child-focused imagery\n\u2022 Traditional orthodontic imagery\n\u2022 Price/budget messaging\n\u2022 Busy layouts\n\u2022 Cheesy stock photos\n\u2022 Heavy text blocks"
+            },
+            "4": {
+                        "id": 4,
+                        "doctor_name": "Dr. Joesph",
+                        "name": "High-Expertise Clinical Ortho",
+                        "positioning": "Authority, precision, and clinical depth (not luxury boutique). Ideal for offices emphasizing board certification, experience, complex cases.",
+                        "messaging": "Leads with credentials, successful outcomes, quality\nOffers are minimal or positioned as \u201cseasonal\u201d\nAvoids overly playful or budget-heavy tone",
+                        "patient_base": "Adults seeking expertise\nParents of complex-case teens\nReferrals from general dentists",
+                        "example_clients": "Wilson\nPayne",
+                        "examples_wild": "https://www.ucsfdentalcenter.org/",
+                        "copy_dos_donts": "",
+                        "moodboard_link": "",
+                        "typography": "Professional Sans-Serif: Helvetica, Arial, Open Sans\nOptional Serif: Georgia, Merriweather (for credentials)\nWeight: Regular to Bold\nStyle: Authoritative, clear, professional\nNo playful or decorative fonts",
+                        "imagery": "\u2022 Doctor in professional attire/white coat\n\u2022 Credentials and certifications visible\n\u2022 Clinical setting, modern equipment\n\u2022 Complex case transformations\n\u2022 Detailed before/after documentation\n\u2022 Professional headshots\n\u2022 Technical diagrams/x-rays (when appropriate)\n\u2022 Awards, publications",
+                        "layout": "\u2022 Structured and organized\n\u2022 Grid-based, systematic\n\u2022 Information hierarchy clear\n\u2022 Credentials prominently placed\n\u2022 Data/statistics visualized\n\u2022 Professional margins\n\u2022 Academic/medical journal influence",
+                        "visual_tone": "\u2022 Authoritative and expert\n\u2022 Precise and clinical\n\u2022 Trustworthy through credibility\n\u2022 Serious but not cold\n\u2022 Evidence-based\n\u2022 Confidence through competence",
+                        "iconography": "\u2022 Clinical, precise icons\n\u2022 Medical symbols\n\u2022 Certification badges\n\u2022 Graph/chart elements\n\u2022 Precision measurement tools\n\u2022 Shield (trust/protection)\n\u2022 Clean, professional line work",
+                        "texture": "\u2022 Clean, clinical surfaces\n\u2022 Minimal texture\n\u2022 Subtle fabric (lab coat)\n\u2022 Medical grade finishes\n\u2022 Avoid decorative elements",
+                        "design_principles": "\u2022 Credentials front and center\n\u2022 Evidence-based messaging\n\u2022 Professional standards visible\n\u2022 Technical expertise demonstrated\n\u2022 Quality over quantity\n\u2022 Systematic approach shown\n\u2022 Results speak louder than marketing",
+                        "avoid": "\u2022 Overly promotional tone\n\u2022 Casual imagery\n\u2022 Playful colors or fonts\n\u2022 Budget/price focus\n\u2022 Trendy design elements\n\u2022 Cartoon or overly simplified visuals\n\u2022 Informal language"
+            },
+            "5": {
+                        "id": 5,
+                        "doctor_name": "",
+                        "name": "Premium Family Ortho",
+                        "positioning": "Warm, modern, high-quality practice that serves both families and adults. They look polished and capable, but not formal or exclusive. Their premium nature comes from reputation, treatment outcome, patient experience, consistency, and expertise. ",
+                        "messaging": "Leads with family trust + clinical confidence and highlights\nExpertise, Outcomes, Comfort, Convenience, Technology that supports quality\nPricing/Offers:Light but acceptable",
+                        "patient_base": "Middle to upper-middle income families\nParents seeking a high-quality but accessible practice\nAdults wanting Invisalign/Aligner treatments in a warm, modern environment\nSuburban + growing urban markets",
+                        "example_clients": "Chang\nKinser\nTeam\nBowman\nUptown",
+                        "examples_wild": "",
+                        "copy_dos_donts": "",
+                        "moodboard_link": "",
+                        "typography": "Modern Sans-Serif: Quicksand, Sofia Pro, Circular\nWeight: Regular to Semi-Bold\nStyle: Polished but approachable\nPersonality: Confident, warm, refined without being stuffy",
+                        "imagery": "\u2022 Diverse, modern families\n\u2022 Professional but warm settings\n\u2022 Contemporary office spaces\n\u2022 Both kids and adults feeling comfortable\n\u2022 Genuine smiles and interactions\n\u2022 Lifestyle + clinical blend\n\u2022 High production value, natural lighting\n\u2022 Modern technology visible",
+                        "layout": "\u2022 Balanced white space (not excessive)\n\u2022 Thoughtful composition\n\u2022 Quality photography featured prominently\n\u2022 Clean but not minimal\n\u2022 Professional grid system\n\u2022 Breathing room without feeling sparse\n\u2022 Premium but accessible feel",
+                        "visual_tone": "\u2022 Polished and capable\n\u2022 Warm but not casual\n\u2022 Confident excellence\n\u2022 Quality-focused\n\u2022 Modern family values\n\u2022 Approachable premium",
+                        "iconography": "\u2022 Refined, modern icons\n\u2022 Family symbols (updated, modern)\n\u2022 Technology indicators\n\u2022 Quality badges (subtle)\n\u2022 Balance clinical + friendly\n\u2022 Medium line weights",
+                        "texture": "\u2022 Quality materials suggested\n\u2022 Soft, premium fabrics\n\u2022 Natural wood (light, modern)\n\u2022 Stone/marble (subtle)\n\u2022 Avoid overly rustic or industrial",
+                        "design_principles": "\u2022 Quality evident in every detail\n\u2022 Modern meets timeless\n\u2022 Family-inclusive design\n\u2022 Technology as enabler of care\n\u2022 Professional warmth\n\u2022 Consistent brand experience\n\u2022 Both accessible AND premium",
+                        "avoid": "\u2022 Budget aesthetics\n\u2022 Ultra-luxury exclusivity\n\u2022 Cold corporate feel\n\u2022 Overly trendy elements\n\u2022 Cheap stock photography\n\u2022 Cluttered layouts\n\u2022 Single demographic focus"
+            },
+            "6": {
+                        "id": 6,
+                        "doctor_name": "",
+                        "name": "The Wellness Educator",
+                        "positioning": "Teacher, guide, long-term wellness partner. High emphasis on systemic health, root-cause awareness, and patient empowerment.",
+                        "messaging": "Leads with education and long-term health\nAvoids hype and overly \u201csalesy\u201d feel",
+                        "patient_base": "Adults\nWellness-forward individuals\nPeople with chronic concerns or sensitivities",
+                        "example_clients": "Virginia",
+                        "examples_wild": "https://www.lyfesmilesortho.com/",
+                        "copy_dos_donts": "",
+                        "moodboard_link": "",
+                        "typography": "Clean Sans-Serif: Lato, Source Sans Pro, Karla\nWeight: Regular, emphasis on readability\nStyle: Educational, clear, approachable\nHierarchy: Clear for scanning information",
+                        "imagery": "\u2022 Educational diagrams and infographics\n\u2022 Natural elements (plants, nature)\n\u2022 Cross-section health illustrations\n\u2022 Whole-body health concepts\n\u2022 Teacher/guide positioning\n\u2022 Lifestyle wellness shots\n\u2022 No overly clinical imagery\n\u2022 Real education happening",
+                        "layout": "\u2022 Information-organized layouts\n\u2022 Clear sections for learning\n\u2022 Infographic-style elements\n\u2022 Whitespace for comprehension\n\u2022 Sequential/flow-based design\n\u2022 Charts and visual data\n\u2022 Scannable content blocks",
+                        "visual_tone": "\u2022 Educational and empowering\n\u2022 Knowledgeable guide\n\u2022 Patient-centered\n\u2022 Root-cause focused\n\u2022 Long-term wellness\n\u2022 Natural, not \"crunchy\"",
+                        "iconography": "\u2022 Educational symbols\n\u2022 Body systems icons\n\u2022 Natural elements (leaf, etc.)\n\u2022 Connection/link symbols\n\u2022 Growth/improvement arrows\n\u2022 Holistic health symbols\n\u2022 Clear, informative style",
+                        "texture": "\u2022 Natural textures (paper, linen)\n\u2022 Organic patterns (subtle)\n\u2022 Earth elements\n\u2022 Soft, matte finishes\n\u2022 Avoid synthetic/glossy",
+                        "design_principles": "\u2022 Education first, sales second\n\u2022 Evidence-based information\n\u2022 Whole-body connections visible\n\u2022 Patient empowerment\n\u2022 Long-term thinking\n\u2022 Natural, not alternative\n\u2022 Credible wellness approach",
+                        "avoid": "\u2022 Hard sales tactics\n\u2022 Overly spiritual imagery\n\u2022 Pseudoscience aesthetics\n\u2022 Too clinical/medical\n\u2022 Intimidating information\n\u2022 Quick-fix messaging\n\u2022 Disconnected dental focus"
+            },
+            "7": {
+                        "id": 7,
+                        "doctor_name": "",
+                        "name": "Luxury Wellness Practice",
+                        "positioning": "Spa-like, premium, elevated holistic care. High-end experience without spiritual overtones.",
+                        "messaging": "Leads with comfort, experience, premium care\nEducates lightly \u2014 more about experience than teaching",
+                        "patient_base": "Adults 30\u201365\nPremium market consumers\nCosmetic + wellness-minded patients",
+                        "example_clients": "Renew ",
+                        "examples_wild": "",
+                        "copy_dos_donts": "",
+                        "moodboard_link": "",
+                        "typography": "Elegant Serif: Cormorant, Playfair Display, Lora\nSans-Serif: Brandon Grotesque, Avenir (for body)\nWeight: Light to Regular (elegant, refined)\nStyle: Sophisticated, spa-like, calming",
+                        "imagery": "\u2022 Spa-like environments\n\u2022 Serene, peaceful settings\n\u2022 Luxury materials (marble, brass)\n\u2022 Soft, diffused lighting\n\u2022 Premium experience moments\n\u2022 Relaxation and comfort\n\u2022 High-end lifestyle integration\n\u2022 Minimal clutter, zen-like\n\u2022 Adult-focused (30-65)",
+                        "layout": "\u2022 Generous white space (luxury breathing room)\n\u2022 Elegant, flowing compositions\n\u2022 Centered or asymmetric balance\n\u2022 Premium margins\n\u2022 Minimal elements per layout\n\u2022 High-end editorial feel\n\u2022 Spa brochure aesthetic",
+                        "visual_tone": "\u2022 Elevated and refined\n\u2022 Serene and calming\n\u2022 Premium experience focus\n\u2022 Exclusive but welcoming\n\u2022 Wellness as luxury\n\u2022 Spa-like tranquility",
+                        "iconography": "\u2022 Minimal, elegant icons\n\u2022 Spa/wellness symbols\n\u2022 Natural elements (refined)\n\u2022 Very thin line weights\n\u2022 Subtle, understated\n\u2022 Premium finishes suggested",
+                        "texture": "\u2022 Soft, luxurious textures\n\u2022 Linen, silk suggestions\n\u2022 Marble (white, soft veining)\n\u2022 Wood (light, refined)\n\u2022 Watercolor washes (subtle)\n\u2022 Avoid busy or rough textures",
+                        "design_principles": "\u2022 Experience over everything\n\u2022 Luxury through restraint\n\u2022 Wellness as self-care\n\u2022 Premium without pretension\n\u2022 Serenity in every element\n\u2022 Quality of experience emphasized\n\u2022 Spa standards applied",
+                        "avoid": "\u2022 Clinical medical aesthetics\n\u2022 Budget messaging of any kind\n\u2022 Busy layouts or colors\n\u2022 Hard edges or aggressive design\n\u2022 Family/kids imagery\n\u2022 Overly spiritual elements\n\u2022 Discount/promotional feel"
+            },
+            "8": {
+                        "id": 8,
+                        "doctor_name": "",
+                        "name": "Science-Driven Holistic Clinic",
+                        "positioning": "Bridges functional medicine and modern dentistry. Emphasizes data, testing, whole-body diagnostics.",
+                        "messaging": "Leads with expertise, diagnostics, research-backed care\nModerate price language\nAvoids overly \u201cspiritual\u201d visuals or terminology",
+                        "patient_base": "Adults\nHealth-conscious professionals\nComplex case patients",
+                        "example_clients": "Nautical",
+                        "examples_wild": "",
+                        "copy_dos_donts": "",
+                        "moodboard_link": "",
+                        "typography": "Modern Sans-Serif: Inter, IBM Plex Sans, Work Sans\nWeight: Regular to Semi-Bold\nStyle: Scientific, modern, credible\nClean and data-friendly",
+                        "imagery": "\u2022 Diagnostic technology and testing\n\u2022 Research/lab elements\n\u2022 Data visualization and charts\n\u2022 Modern clinical environments\n\u2022 Natural health elements (balanced)\n\u2022 Health professionals analyzing data\n\u2022 Evidence-based imagery\n\u2022 Scientific papers/research\n\u2022 Whole-body health connections (with data)",
+                        "layout": "\u2022 Data-forward design\n\u2022 Organized, systematic\n\u2022 Information hierarchy clear\n\u2022 Scientific credibility visible\n\u2022 Charts and graphs integrated\n\u2022 Modern medical aesthetic\n\u2022 Natural elements as accents\n\u2022 Research paper influence",
+                        "visual_tone": "\u2022 Scientific and credible\n\u2022 Research-backed\n\u2022 Modern medical approach\n\u2022 Holistic through data\n\u2022 Expert but accessible\n\u2022 Evidence-based confidence",
+                        "iconography": "\u2022 Scientific symbols (molecules, etc.)\n\u2022 Diagnostic tool icons\n\u2022 Data/chart elements\n\u2022 Body systems (scientific style)\n\u2022 Testing equipment\n\u2022 Research/study symbols\n\u2022 Clean, modern line work",
+                        "texture": "\u2022 Clean, modern surfaces\n\u2022 Subtle technical patterns\n\u2022 Natural elements (refined)\n\u2022 Medical-grade finishes\n\u2022 Data visualization textures\n\u2022 Avoid overly organic/rustic",
+                        "design_principles": "\u2022 Data and diagnostics prominent\n\u2022 Scientific credibility first\n\u2022 Holistic through evidence\n\u2022 Modern medical standards\n\u2022 Research-backed claims\n\u2022 Whole-body connections proven\n\u2022 Technology as diagnostic tool",
+                        "avoid": "\u2022 Pseudoscience aesthetics\n\u2022 Overly spiritual imagery\n\u2022 Unsubstantiated wellness claims\n\u2022 Traditional alternative medicine look\n\u2022 Budget or casual presentation\n\u2022 Disconnected natural elements\n\u2022 Missing scientific credibility"
+            }
+};
+
+
+        const overlaps = [
+            { source: 2, target: 5, strength: "strong", shared: ["family-oriented", "trust", "multi-generational", "community focus"] },
+            { source: 3, target: 7, strength: "strong", shared: ["cosmetic focus", "adult audience", "premium positioning", "sleek design"] },
+            { source: 4, target: 8, strength: "strong", shared: ["scientific approach", "diagnostic focus", "expertise", "evidence-based"] },
+            { source: 6, target: 8, strength: "strong", shared: ["holistic approach", "root-cause focus", "education", "natural"] },
+            { source: 1, target: 2, strength: "medium", shared: ["accessible", "community-oriented", "family-friendly"] },
+            { source: 2, target: 6, strength: "medium", shared: ["educational", "warm approach", "patient empowerment"] },
+            { source: 3, target: 4, strength: "medium", shared: ["professional", "adult audience", "results-focused"] },
+            { source: 5, target: 7, strength: "medium", shared: ["premium positioning", "elevated experience", "quality focus"] },
+            { source: 4, target: 5, strength: "medium", shared: ["expertise", "technology", "outcomes focus"] },
+            { source: 6, target: 7, strength: "medium", shared: ["holistic wellness", "lifestyle integration", "natural aesthetics"] },
+            { source: 1, target: 4, strength: "weak", shared: ["accessible care", "results-focused"] },
+            { source: 1, target: 6, strength: "weak", shared: ["patient education", "community wellness"] },
+            { source: 3, target: 5, strength: "weak", shared: ["adult audience", "professional approach"] },
+            { source: 5, target: 8, strength: "weak", shared: ["comprehensive care", "advanced approach"] },
+            { source: 7, target: 8, strength: "weak", shared: ["holistic wellness", "advanced treatments"] }
+        ];
+
+        let svg, g, tooltip, zoom;
+        let selectedPersona = null;
+        let currentFilter = 'all';
+        let labelsVisible = true;
+
+        // Initialize
+        loadD3()
+            .then(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('controls').style.display = 'block';
+                initializeVisualization();
+            })
+            .catch(error => {
+                console.error('Error loading D3.js:', error);
+                document.getElementById('loading').style.display = 'none';
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = `
+                    <h3>⚠️ Error Loading Visualization</h3>
+                    <p>Could not load D3.js library. Please check your internet connection.</p>
+                `;
+            });
+
+        function initializeVisualization() {
+            tooltip = d3.select('body')
+                .append('div')
+                .attr('class', 'tooltip');
+
+            const width = document.getElementById('visualization').offsetWidth - 40;
+            const height = 800;
+
+            // Setup zoom
+            zoom = d3.zoom()
+                .scaleExtent([0.5, 3])
+                .on('zoom', (event) => {
+                    g.attr('transform', event.transform);
+                });
+
+            svg = d3.select('#visualization')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .call(zoom);
+
+            g = svg.append('g');
+
+            // Add zoom controls
+            const zoomControls = d3.select('#visualization')
+                .append('div')
+                .attr('class', 'zoom-controls');
+
+            zoomControls.append('button')
+                .attr('class', 'zoom-button')
+                .text('+')
+                .on('click', () => {
+                    svg.transition().duration(300).call(zoom.scaleBy, 1.3);
+                });
+
+            zoomControls.append('button')
+                .attr('class', 'zoom-button')
+                .text('−')
+                .on('click', () => {
+                    svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+                });
+
+            // Setup filter buttons
+            d3.selectAll('.filter-button').on('click', function() {
+                d3.selectAll('.filter-button').classed('active', false);
+                d3.select(this).classed('active', true);
+                currentFilter = this.dataset.filter;
+                updateFilters();
+            });
+
+            drawVisualization(width, height);
+        }
+
+        function drawVisualization(width, height) {
+            g.selectAll('*').remove();
+
+            const clusters = [
+                { name: "Budget/Accessible", personas: [1], x: width * 0.2, y: height * 0.3, color: "#3182ce" },
+                { name: "Family-Focused", personas: [2, 5], x: width * 0.5, y: height * 0.2, color: "#38a169" },
+                { name: "Cosmetic/Aesthetic", personas: [3, 7], x: width * 0.8, y: height * 0.3, color: "#805ad5" },
+                { name: "Clinical/Scientific", personas: [4, 8], x: width * 0.35, y: height * 0.65, color: "#d69e2e" },
+                { name: "Wellness/Education", personas: [6, 8], x: width * 0.65, y: height * 0.65, color: "#48bb78" }
+            ];
+
+            // Draw cluster circles
+            const clusterCircles = g.selectAll('.cluster-circle')
+                .data(clusters)
+                .enter()
+                .append('circle')
+                .attr('class', 'cluster-circle')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', 100)
+                .attr('fill', d => d.color)
+                .attr('opacity', 0.15)
+                .attr('stroke', d => d.color)
+                .attr('stroke-width', 3);
+
+            // Draw cluster labels
+            const clusterLabels = g.selectAll('.cluster-label')
+                .data(clusters)
+                .enter()
+                .append('text')
+                .attr('class', 'cluster-label')
+                .attr('x', d => d.x)
+                .attr('y', d => d.y - 120)
+                .attr('text-anchor', 'middle')
+                .attr('font-weight', 'bold')
+                .attr('font-size', '14px')
+                .attr('fill', d => d.color)
+                .text(d => d.name)
+                .on('click', function(event, d) {
+                    highlightCluster(d);
+                });
+
+            // Draw links first (so they're behind nodes)
+            const links = g.append('g')
+                .attr('class', 'links-group')
+                .selectAll('.link')
+                .data(overlaps)
+                .enter()
+                .append('line')
+                .attr('class', d => `link ${d.strength}`)
+                .attr('data-strength', d => d.strength)
+                .each(function(d) {
+                    // Fix: Handle both number IDs and object references
+                    const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+                    const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+                    
+                    const source = personas.find(p => p.id === sourceId);
+                    const target = personas.find(p => p.id === targetId);
+                    
+                    if (!source || !target) {
+                        console.warn('Could not find personas for overlap:', d);
+                        return;
+                    }
+                    
+                    const sourceCluster = clusters.find(c => c.personas.includes(source.id));
+                    const targetCluster = clusters.find(c => c.personas.includes(target.id));
+                    
+                    if (sourceCluster && targetCluster) {
+                        const sourceAngle = sourceCluster.personas.indexOf(source.id) * (Math.PI * 2 / sourceCluster.personas.length);
+                        const targetAngle = targetCluster.personas.indexOf(target.id) * (Math.PI * 2 / targetCluster.personas.length);
+                        const sourceOffset = sourceCluster.personas.length > 1 ? 40 : 0;
+                        const targetOffset = targetCluster.personas.length > 1 ? 40 : 0;
+                        
+                        d.x1 = sourceCluster.x + Math.cos(sourceAngle) * sourceOffset;
+                        d.y1 = sourceCluster.y + Math.sin(sourceAngle) * sourceOffset;
+                        d.x2 = targetCluster.x + Math.cos(targetAngle) * targetOffset;
+                        d.y2 = targetCluster.y + Math.sin(targetAngle) * targetOffset;
+                    }
+                })
+                .attr('x1', d => d.x1 || 0)
+                .attr('y1', d => d.y1 || 0)
+                .attr('x2', d => d.x2 || 0)
+                .attr('y2', d => d.y2 || 0)
+                .on('mouseover', function(event, d) {
+                    const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+                    const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+                    const sourceName = personas.find(p => p.id === sourceId).name;
+                    const targetName = personas.find(p => p.id === targetId).name;
+                    
+                    tooltip.transition().duration(200).style('opacity', 1);
+                    tooltip.html(`
+                        <strong>${sourceName} ↔ ${targetName}</strong><br>
+                        Overlap Strength: ${d.strength.toUpperCase()}<br>
+                        <br><strong>Shared Characteristics:</strong><br>
+                        ${d.shared.map(s => `• ${s}`).join('<br>')}
+                    `)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 10) + 'px');
+                })
+                .on('mouseout', function() {
+                    tooltip.transition().duration(200).style('opacity', 0);
+                });
+
+            // Position personas within clusters
+            personas.forEach(persona => {
+                const cluster = clusters.find(c => c.personas.includes(persona.id));
+                if (!cluster) return;
+                
+                const angle = cluster.personas.indexOf(persona.id) * (Math.PI * 2 / cluster.personas.length);
+                const offset = cluster.personas.length > 1 ? 40 : 0;
+                persona.x = cluster.x + Math.cos(angle) * offset;
+                persona.y = cluster.y + Math.sin(angle) * offset;
+            });
+
+            // Draw persona nodes
+            const nodes = g.selectAll('.persona-node')
+                .data(personas)
+                .enter()
+                .append('g')
+                .attr('class', 'persona-node')
+                .attr('transform', d => `translate(${d.x},${d.y})`)
+                .on('click', function(event, d) {
+                    selectPersona(d);
+                })
+                .on('mouseover', function(event, d) {
+                    if (selectedPersona && selectedPersona.id !== d.id) return;
+                    
+                    tooltip.transition().duration(200).style('opacity', 1);
+                    tooltip.html(`
+                        <strong>${d.fullName}</strong><br>
+                        Category: ${d.category}<br>
+                        <br><strong>Key Characteristics:</strong><br>
+                        ${d.characteristics.map(c => `• ${c}`).join('<br>')}
+                        <br><br><em>Click to see connections</em>
+                    `)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 10) + 'px');
+                })
+                .on('mouseout', function() {
+                    if (!selectedPersona) {
+                        tooltip.transition().duration(200).style('opacity', 0);
+                    }
+                });
+
+            nodes.append('circle')
+                .attr('r', 45)
+                .attr('fill', d => d.color)
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 3);
+
+            nodes.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '.35em')
+                .attr('fill', 'white')
+                .attr('font-weight', 'bold')
+                .attr('font-size', '11px')
+                .each(function(d) {
+                    const words = d.name.split(' ');
+                    const text = d3.select(this);
+                    words.forEach((word, i) => {
+                        text.append('tspan')
+                            .attr('x', 0)
+                            .attr('dy', i === 0 ? '-0.6em' : '1.2em')
+                            .text(word);
+                    });
+                });
+
+            updateFilters();
+        }
+
+        function selectPersona(persona) {
+            if (selectedPersona && selectedPersona.id === persona.id) {
+                // Deselect
+                selectedPersona = null;
+                g.selectAll('.persona-node').classed('selected', false).classed('dimmed', false);
+                g.selectAll('.link').classed('highlighted', false).classed('dimmed', false);
+                g.selectAll('.cluster-circle').classed('dimmed', false);
+                document.getElementById('stats').style.display = 'none';
+                tooltip.transition().duration(200).style('opacity', 0);
+            } else {
+                // Select
+                selectedPersona = persona;
+                
+                // Open the detail modal
+                openPersonaModal(persona.id);
+                
+                // Get connections
+                const connections = overlaps.filter(o => {
+                    const sourceId = typeof o.source === 'object' ? o.source.id : o.source;
+                    const targetId = typeof o.target === 'object' ? o.target.id : o.target;
+                    return sourceId === persona.id || targetId === persona.id;
+                });
+                
+                const connectedIds = new Set();
+                connections.forEach(c => {
+                    const sourceId = typeof c.source === 'object' ? c.source.id : c.source;
+                    const targetId = typeof c.target === 'object' ? c.target.id : c.target;
+                    connectedIds.add(sourceId);
+                    connectedIds.add(targetId);
+                });
+                
+                // Update visuals
+                g.selectAll('.persona-node')
+                    .classed('selected', d => d.id === persona.id)
+                    .classed('dimmed', d => !connectedIds.has(d.id));
+                
+                g.selectAll('.link')
+                    .classed('highlighted', d => {
+                        const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+                        const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+                        return sourceId === persona.id || targetId === persona.id;
+                    })
+                    .classed('dimmed', d => {
+                        const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+                        const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+                        return sourceId !== persona.id && targetId !== persona.id;
+                    });
+                
+                // Update stats
+                const strong = connections.filter(c => c.strength === 'strong').length;
+                const medium = connections.filter(c => c.strength === 'medium').length;
+                const weak = connections.filter(c => c.strength === 'weak').length;
+                
+                document.getElementById('stat-connections').textContent = connections.length;
+                document.getElementById('stat-strong').textContent = strong;
+                document.getElementById('stat-medium').textContent = medium;
+                document.getElementById('stat-weak').textContent = weak;
+                document.getElementById('stats').style.display = 'block';
+            }
+        }
+
+        function highlightCluster(cluster) {
+            // Highlight all personas in this cluster
+            g.selectAll('.persona-node')
+                .classed('dimmed', d => !cluster.personas.includes(d.id))
+                .transition()
+                .duration(300);
+            
+            g.selectAll('.cluster-circle')
+                .classed('dimmed', d => d.name !== cluster.name)
+                .transition()
+                .duration(300);
+        }
+
+        function updateFilters() {
+            g.selectAll('.link')
+                .style('display', function() {
+                    const strength = d3.select(this).attr('data-strength');
+                    if (currentFilter === 'all') return 'block';
+                    return strength === currentFilter ? 'block' : 'none';
+                });
+        }
+
+        function resetView() {
+            selectedPersona = null;
+            currentFilter = 'all';
+            
+            // Reset filter buttons
+            d3.selectAll('.filter-button').classed('active', false);
+            d3.select('.filter-button[data-filter="all"]').classed('active', true);
+            
+            // Reset visuals
+            g.selectAll('.persona-node')
+                .classed('selected', false)
+                .classed('dimmed', false);
+            
+            g.selectAll('.link')
+                .classed('highlighted', false)
+                .classed('dimmed', false)
+                .style('display', 'block');
+            
+            g.selectAll('.cluster-circle')
+                .classed('dimmed', false);
+            
+            // Reset zoom
+            svg.transition()
+                .duration(750)
+                .call(zoom.transform, d3.zoomIdentity);
+            
+            document.getElementById('stats').style.display = 'none';
+            tooltip.transition().duration(200).style('opacity', 0);
+        }
+
+        function toggleLabels() {
+            labelsVisible = !labelsVisible;
+            g.selectAll('.cluster-label')
+                .transition()
+                .duration(300)
+                .style('opacity', labelsVisible ? 1 : 0);
+        }
+        
+        // Modal functions
+        function openPersonaModal(personaId) {
+            const detail = personasDetail[personaId];
+            if (!detail) return;
+            
+            const modal = document.getElementById('personaModal');
+            
+            // Populate modal content
+            document.getElementById('modalTitle').textContent = detail.doctor_name 
+                ? `${detail.doctor_name} - ${detail.name}` 
+                : detail.name;
+            
+            document.getElementById('modalPositioning').textContent = detail.positioning || 'N/A';
+            document.getElementById('modalMessaging').textContent = detail.messaging || 'N/A';
+            document.getElementById('modalPatientBase').textContent = detail.patient_base || 'N/A';
+            document.getElementById('modalExamples').textContent = detail.example_clients || 'N/A';
+            
+            // Populate design tabs
+            document.getElementById('tab-typography').textContent = detail.typography || 'N/A';
+            document.getElementById('tab-imagery').textContent = detail.imagery || 'N/A';
+            document.getElementById('tab-layout').textContent = detail.layout || 'N/A';
+            document.getElementById('tab-tone').textContent = detail.visual_tone || 'N/A';
+            document.getElementById('tab-iconography').textContent = detail.iconography || 'N/A';
+            document.getElementById('tab-texture').textContent = detail.texture || 'N/A';
+            document.getElementById('tab-principles').textContent = detail.design_principles || 'N/A';
+            document.getElementById('tab-avoid').textContent = detail.avoid || 'N/A';
+            
+            // Set examples link
+            const examplesLink = document.getElementById('modalExamplesLink');
+            if (detail.examples_wild) {
+                examplesLink.href = detail.examples_wild;
+                examplesLink.style.display = 'inline-block';
+            } else {
+                examplesLink.style.display = 'none';
+            }
+            
+            // Show modal
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closePersonaModal() {
+            const modal = document.getElementById('personaModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Initialize modal event listeners after DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close button
+            const closeBtn = document.querySelector('.modal-close');
+            if (closeBtn) {
+                closeBtn.onclick = closePersonaModal;
+            }
+            
+            // Click outside modal to close
+            window.onclick = function(event) {
+                const modal = document.getElementById('personaModal');
+                if (event.target == modal) {
+                    closePersonaModal();
+                }
+            };
+            
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and panes
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding tab pane
+                    const tabName = this.getAttribute('data-tab');
+                    document.getElementById('tab-' + tabName).classList.add('active');
+                });
+            });
+            
+            // ESC key to close modal
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closePersonaModal();
+                }
+            });
+        });
+    </script>
+
+    <!-- Persona Detail Modal -->
+    <div id="personaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-section">
+                        <h3>📍 Positioning</h3>
+                        <p id="modalPositioning"></p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>💬 Messaging Behavior</h3>
+                        <p id="modalMessaging"></p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>👥 Patient Base</h3>
+                        <p id="modalPatientBase"></p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>🏢 Example Clients</h3>
+                        <p id="modalExamples"></p>
+                    </div>
+                </div>
+                
+                <div class="design-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="typography">Typography</button>
+                        <button class="tab-button" data-tab="imagery">Imagery</button>
+                        <button class="tab-button" data-tab="layout">Layout</button>
+                        <button class="tab-button" data-tab="tone">Visual Tone</button>
+                        <button class="tab-button" data-tab="iconography">Iconography</button>
+                        <button class="tab-button" data-tab="texture">Texture</button>
+                        <button class="tab-button" data-tab="principles">Design Principles</button>
+                        <button class="tab-button" data-tab="avoid">⚠️ Avoid</button>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <div id="tab-typography" class="tab-pane active"></div>
+                        <div id="tab-imagery" class="tab-pane"></div>
+                        <div id="tab-layout" class="tab-pane"></div>
+                        <div id="tab-tone" class="tab-pane"></div>
+                        <div id="tab-iconography" class="tab-pane"></div>
+                        <div id="tab-texture" class="tab-pane"></div>
+                        <div id="tab-principles" class="tab-pane"></div>
+                        <div id="tab-avoid" class="tab-pane"></div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <a id="modalExamplesLink" href="#" target="_blank" class="action-button">🔗 View Examples in the Wild</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
