@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D. K. Kardashian - Luxury Wellness Practice | OrthoBoost Personas</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦷</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #29bbf6 0%, #163055 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .header { background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%); padding: 30px 40px; color: white; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo-icon { font-size: 36px; }
+        .logo { font-size: 28px; font-weight: 900; color: white; }
+        .back-button { padding: 10px 20px; background: rgba(255,255,255,0.2); border: 2px solid white; color: white; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; display: inline-block; }
+        .back-button:hover { background: white; color: #29bbf6; transform: translateY(-2px); }
+        .persona-title { font-size: 2.5em; margin-bottom: 10px; }
+        .persona-subtitle { font-size: 1.2em; opacity: 0.95; }
+        .persona-color-badge { display: inline-block; width: 40px; height: 40px; border-radius: 50%; border: 3px solid white; margin-left: 15px; vertical-align: middle; }
+        .content { padding: 40px; }
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .overview-card { background: #f8fdff; padding: 25px; border-radius: 12px; border-left: 4px solid #29bbf6; }
+        .overview-card h3 { color: #163055; margin-bottom: 15px; font-size: 1.3em; }
+        .overview-card p { color: #4a5568; line-height: 1.6; white-space: pre-line; }
+        .tabs { margin-top: 40px; }
+        .tab-buttons { display: flex; gap: 10px; flex-wrap: wrap; border-bottom: 3px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 30px; }
+        .tab-button { padding: 12px 24px; background: #f7fafc; border: 2px solid #79efe1; color: #163055; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.3s ease; }
+        .tab-button:hover { background: #e6f7fb; border-color: #29bbf6; }
+        .tab-button.active { background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%); color: white; border-color: #29bbf6; }
+        .tab-pane { display: none; background: #f8fdff; padding: 30px; border-radius: 12px; min-height: 300px; }
+        .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-pane h4 { color: #163055; margin-bottom: 15px; font-size: 1.2em; }
+        .tab-pane p { color: #4a5568; line-height: 1.8; white-space: pre-line; }
+        .links-section { margin-top: 40px; padding: 30px; background: linear-gradient(135deg, rgba(41, 187, 246, 0.1) 0%, rgba(121, 239, 225, 0.1) 100%); border-radius: 12px; text-align: center; }
+        .links-section h3 { color: #163055; margin-bottom: 20px; font-size: 1.5em; }
+        .link-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .link-button { display: inline-block; padding: 15px 30px; background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; border: 2px solid #29bbf6; }
+        .link-button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(41, 187, 246, 0.4); }
+        .link-button.pinterest { background: linear-gradient(135deg, #e60023 0%, #c60019 100%); border-color: #e60023; }
+        .link-button.pinterest:hover { box-shadow: 0 5px 15px rgba(230, 0, 35, 0.4); }
+        .navigation { margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .nav-button { padding: 12px 24px; background: #f7fafc; border: 2px solid #79efe1; color: #163055; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; display: inline-block; }
+        .nav-button:hover { background: #29bbf6; color: white; border-color: #29bbf6; }
+        .nav-button.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+        .footer { text-align: center; padding: 20px; color: #718096; font-size: 14px; }
+        @media (max-width: 768px) { .persona-title { font-size: 2em; } .content { padding: 20px; } .overview-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <div class="logo-section">
+                    <span class="logo-icon">🦷</span>
+                    <div class="logo">OrthoBoost</div>
+                </div>
+                <a href="index.html" class="back-button">← Back to All Personas</a>
+            </div>
+            <h1 class="persona-title">D. K. Kardashian<span class="persona-color-badge" style="background: #9f7aea;"></span></h1>
+            <p class="persona-subtitle">Luxury Wellness Practice</p>
+        </div>
+        <div class="content">
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <h3>📍 Positioning</h3>
+                    <p>Spa-like, premium, elevated holistic care. High-end experience without spiritual overtones. Luxury wellness practice where the experience is the product—refined, serene, premium care as self-care.</p>
+                </div>
+                <div class="overview-card">
+                    <h3>💬 Messaging Behavior</h3>
+                    <p>Leads with comfort, experience, premium care
+Educates lightly — more about experience than teaching
+CORE VOICE: Refined, serene, elevated. Spa-like tranquility meets premium healthcare. Minimal but luxurious language. Emphasize experience, comfort, and premium service. Never rushed, never budget-conscious, never apologetic about luxury.</p>
+                </div>
+                <div class="overview-card">
+                    <h3>👥 Patient Base</h3>
+                    <p>Adults 30–65
+Premium market consumers
+Cosmetic + wellness-minded patients
+High-income professionals
+Experience-focused individuals
+Patients seeking elevated care</p>
+                </div>
+                <div class="overview-card">
+                    <h3>🏢 Example Clients</h3>
+                    <p>Renew</p>
+                </div>
+            </div>
+            <div class="tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('typography')">Typography</button>
+                    <button class="tab-button" onclick="showTab('imagery')">Imagery</button>
+                    <button class="tab-button" onclick="showTab('layout')">Layout</button>
+                    <button class="tab-button" onclick="showTab('tone')">Visual Tone</button>
+                    <button class="tab-button" onclick="showTab('iconography')">Iconography</button>
+                    <button class="tab-button" onclick="showTab('texture')">Texture</button>
+                    <button class="tab-button" onclick="showTab('principles')">Design Principles</button>
+                    <button class="tab-button" onclick="showTab('avoid')">⚠️ Avoid</button>
+                </div>
+                <div id="typography" class="tab-pane active">
+                    <h4>Typography Guidelines</h4>
+                    <p>Elegant Serif: Playfair Display, Cormorant
+Sans-Serif: Brandon Grotesque, Futura
+Weight: Light to Regular (refined elegance)
+Style: Sophisticated, upscale, minimal
+Hierarchy: Luxurious spacing and restraint</p>
+                </div>
+                <div id="imagery" class="tab-pane">
+                    <h4>Imagery Guidelines</h4>
+                    <p>• Spa-like environments
+• Luxury wellness settings
+• Serene, peaceful spaces
+• High-end interior design
+• Softly lit, tranquil scenes
+• Premium materials visible
+• Wellness as lifestyle
+• No clinical imagery
+• Experience over procedure</p>
+                </div>
+                <div id="layout" class="tab-pane">
+                    <h4>Layout Guidelines</h4>
+                    <p>• Generous white space (luxury of space)
+• Minimal, refined layouts
+• Elegant asymmetry
+• Premium material suggestions
+• Spa-like serenity in design
+• High-end editorial style
+• Breathing room essential</p>
+                </div>
+                <div id="tone" class="tab-pane">
+                    <h4>Visual Tone</h4>
+                    <p>• Refined and serene
+• Luxury wellness
+• Premium experience
+• Spa-like tranquility
+• Elevated self-care
+• Exclusive without cold</p>
+                </div>
+                <div id="iconography" class="tab-pane">
+                    <h4>Iconography Guidelines</h4>
+                    <p>• Minimal, elegant icons
+• Spa/wellness symbols
+• Luxury indicators
+• Refined line work
+• Subtle, understated
+• Premium aesthetic markers</p>
+                </div>
+                <div id="texture" class="tab-pane">
+                    <h4>Texture Guidelines</h4>
+                    <p>• Luxury materials (silk, linen, marble)
+• Soft, premium textures
+• Spa-like elements
+• Refined natural materials
+• Subtle, high-end finishes
+• Avoid busy or harsh textures</p>
+                </div>
+                <div id="principles" class="tab-pane">
+                    <h4>Design Principles</h4>
+                    <p>• Experience is everything
+• Luxury through restraint
+• Premium materials and space
+• Spa-like serenity
+• Elevated wellness
+• Never rushed or busy
+• Exclusive comfort</p>
+                </div>
+                <div id="avoid" class="tab-pane">
+                    <h4>⚠️ What to Avoid</h4>
+                    <p>• Budget or discount messaging
+• Clinical/medical aesthetics
+• Busy or cluttered layouts
+• Playful or casual tone
+• Overly spiritual imagery
+• Sales pressure
+• Anything rushed or hectic</p>
+                </div>
+            </div>
+            <div class="links-section">
+                <h3>🔗 Resources & Examples</h3>
+                <div class="link-buttons">
+                    <a href="https://eliteorthodonticsgroup.com/" target="_blank" class="link-button">🌐 View Examples in the Wild</a>
+                    <a href="https://pin.it/66Mx0suqF" target="_blank" class="link-button pinterest">📌 View Pinterest Moodboard</a>
+                </div>
+            </div>
+            <div class="navigation">
+                <a href="dr-v-frizzle.html" class="nav-button">← Previous Persona</a>
+                <a href="index.html" class="nav-button">Back to Visualization</a>
+                <a href="dr-b-nye.html" class="nav-button">Next Persona →</a>
+            </div>
+        </div>
+        <div class="footer"><strong>OrthoBoost</strong> Brand Persona System • Persona 7 of 10</div>
+    </div>
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
