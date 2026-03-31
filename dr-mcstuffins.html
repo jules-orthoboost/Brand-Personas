@@ -1,202 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. McStuffins - Pediatric Wellness Practice | OrthoBoost Personas</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦷</text></svg>">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #29bbf6 0%, #163055 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-        .header { background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%); padding: 30px 40px; color: white; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .logo-section { display: flex; align-items: center; gap: 15px; }
-        .logo-icon { font-size: 36px; }
-        .logo { font-size: 28px; font-weight: 900; color: white; }
-        .back-button { padding: 10px 20px; background: rgba(255,255,255,0.2); border: 2px solid white; color: white; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; display: inline-block; }
-        .back-button:hover { background: white; color: #29bbf6; transform: translateY(-2px); }
-        .persona-title { font-size: 2.5em; margin-bottom: 10px; }
-        .persona-subtitle { font-size: 1.2em; opacity: 0.95; }
-        .persona-color-badge { display: inline-block; width: 40px; height: 40px; border-radius: 50%; border: 3px solid white; margin-left: 15px; vertical-align: middle; }
-        .content { padding: 40px; }
-        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
-        .overview-card { background: #f8fdff; padding: 25px; border-radius: 12px; border-left: 4px solid #29bbf6; }
-        .overview-card h3 { color: #163055; margin-bottom: 15px; font-size: 1.3em; }
-        .overview-card p { color: #4a5568; line-height: 1.6; white-space: pre-line; }
-        .tabs { margin-top: 40px; }
-        .tab-buttons { display: flex; gap: 10px; flex-wrap: wrap; border-bottom: 3px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 30px; }
-        .tab-button { padding: 12px 24px; background: #f7fafc; border: 2px solid #79efe1; color: #163055; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.3s ease; }
-        .tab-button:hover { background: #e6f7fb; border-color: #29bbf6; }
-        .tab-button.active { background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%); color: white; border-color: #29bbf6; }
-        .tab-pane { display: none; background: #f8fdff; padding: 30px; border-radius: 12px; min-height: 300px; }
-        .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .tab-pane h4 { color: #163055; margin-bottom: 15px; font-size: 1.2em; }
-        .tab-pane p { color: #4a5568; line-height: 1.8; white-space: pre-line; }
-        .links-section { margin-top: 40px; padding: 30px; background: linear-gradient(135deg, rgba(41, 187, 246, 0.1) 0%, rgba(121, 239, 225, 0.1) 100%); border-radius: 12px; text-align: center; }
-        .links-section h3 { color: #163055; margin-bottom: 20px; font-size: 1.5em; }
-        .link-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .link-button { display: inline-block; padding: 15px 30px; background: linear-gradient(135deg, #29bbf6 0%, #79efe1 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; border: 2px solid #29bbf6; }
-        .link-button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(41, 187, 246, 0.4); }
-        .link-button.pinterest { background: linear-gradient(135deg, #e60023 0%, #c60019 100%); border-color: #e60023; }
-        .link-button.pinterest:hover { box-shadow: 0 5px 15px rgba(230, 0, 35, 0.4); }
-        .navigation { margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-        .nav-button { padding: 12px 24px; background: #f7fafc; border: 2px solid #79efe1; color: #163055; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; display: inline-block; }
-        .nav-button:hover { background: #29bbf6; color: white; border-color: #29bbf6; }
-        .nav-button.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-        .footer { text-align: center; padding: 20px; color: #718096; font-size: 14px; }
-        @media (max-width: 768px) { .persona-title { font-size: 2em; } .content { padding: 20px; } .overview-grid { grid-template-columns: 1fr; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. McStuffins - OrthoBoost Brand Persona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #ffffff; color: #64748b; line-height: 1.6; }
+
+  .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .navbar-logo { font-size: 1.1rem; font-weight: 800; color: #163055; text-decoration: none; letter-spacing: -0.02em; }
+  .navbar-logo span { color: #29bbf6; }
+  .navbar-back { font-size: 0.875rem; font-weight: 500; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.15s; }
+  .navbar-back:hover { color: #163055; }
+
+  .hero { background: #163055; padding: 3.5rem 2rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #ed64a6; }
+  .hero-inner { max-width: 900px; margin: 0 auto; padding-left: 1.5rem; }
+  .hero-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.75rem; }
+  .hero-name { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; color: #ffffff; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 0.75rem; }
+  .hero-subtitle { font-size: 1.125rem; font-weight: 400; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 0.5rem; }
+  .hero-accent-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ed64a6; flex-shrink: 0; }
+
+  .content { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem; }
+  .section-title { font-size: 1.25rem; font-weight: 700; color: #1a202c; margin-bottom: 1.25rem; }
+  .section-divider { border: none; border-top: 1px solid #e2e8f0; margin: 0 0 1.25rem 0; }
+
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 3rem; }
+  .overview-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border-top: 4px solid #ed64a6; }
+  .overview-card-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.6rem; }
+  .overview-card-content { font-size: 0.925rem; color: #64748b; line-height: 1.6; }
+
+  /* Accordion */
+  .accordion { border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin-bottom: 3rem; }
+  .accordion-item { border-bottom: 1px solid #e2e8f0; }
+  .accordion-item:last-child { border-bottom: none; }
+  .accordion-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.5rem; background: #ffffff; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600; color: #163055; text-align: left; transition: background 0.15s; }
+  .accordion-btn:hover { background: #f8fafc; }
+  .accordion-chevron { flex-shrink: 0; transition: transform 0.25s ease; color: #94a3b8; }
+  .accordion-item.open .accordion-chevron { transform: rotate(180deg); }
+  .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .accordion-item.open .accordion-body { max-height: 600px; }
+  .accordion-body-inner { padding: 0.25rem 1.5rem 1.25rem; }
+  .accordion-body ul { list-style: none; padding: 0; }
+  .accordion-body ul li { font-size: 0.875rem; color: #64748b; padding: 0.2rem 0 0.2rem 1.1rem; position: relative; line-height: 1.55; }
+  .accordion-body ul li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 5px; height: 5px; border-radius: 50%; background: #ed64a6; }
+  .accordion-item.avoid .accordion-btn { background: #fff5f5; color: #c53030; }
+  .accordion-item.avoid .accordion-btn:hover { background: #fee2e2; }
+  .accordion-item.avoid .accordion-body { background: #fff5f5; }
+  .accordion-item.avoid ul li::before { background: #fc8181; }
+
+  /* Related Personas */
+  .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 3rem; }
+  .related-card { display: flex; align-items: center; gap: 0.875rem; padding: 1rem 1.25rem; border: 1px solid #e2e8f0; border-radius: 10px; text-decoration: none; background: #ffffff; transition: all 0.15s; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .related-card:hover { border-color: #ed64a6; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transform: translateY(-1px); }
+  .related-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .related-info { flex: 1; min-width: 0; }
+  .related-name { font-size: 0.875rem; font-weight: 600; color: #1a202c; }
+  .related-subtitle { font-size: 0.775rem; color: #94a3b8; margin-top: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .related-arrow { flex-shrink: 0; color: #cbd5e0; }
+
+  .resources-row { display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+  .resource-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.875rem; font-weight: 500; text-decoration: none; border: 1px solid #e2e8f0; color: #163055; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: all 0.15s; }
+  .resource-link:hover { border-color: #ed64a6; color: #ed64a6; box-shadow: 0 2px 8px rgba(237,100,166,0.15); }
+
+  .nav-footer { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; border-top: 1px solid #e2e8f0; margin-bottom: 2rem; gap: 1rem; flex-wrap: wrap; }
+  .nav-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.25rem; border-radius: 999px; font-size: 0.875rem; font-weight: 500; text-decoration: none; border: 1px solid #e2e8f0; color: #163055; background: #ffffff; transition: all 0.15s; white-space: nowrap; }
+  .nav-btn:hover { border-color: #ed64a6; color: #ed64a6; }
+  .nav-btn.disabled { color: #cbd5e0; border-color: #e2e8f0; pointer-events: none; }
+  .nav-btn-center { font-weight: 600; background: #f8fafc; }
+
+  .page-footer { text-align: center; padding: 1.5rem 2rem; font-size: 0.8rem; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+
+  @media (max-width: 640px) {
+    .overview-grid { grid-template-columns: 1fr; }
+    .related-grid { grid-template-columns: 1fr; }
+    .nav-footer { flex-direction: column; align-items: stretch; }
+    .nav-btn { justify-content: center; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-top">
-                <div class="logo-section">
-                    <span class="logo-icon">🦷</span>
-                    <div class="logo">OrthoBoost</div>
-                </div>
-                <a href="index.html" class="back-button">← Back to All Personas</a>
-            </div>
-            <h1 class="persona-title">Dr. McStuffins<span class="persona-color-badge" style="background: #ed64a6;"></span></h1>
-            <p class="persona-subtitle">Pediatric Wellness Practice</p>
-        </div>
-        <div class="content">
-            <div class="overview-grid">
-                <div class="overview-card">
-                    <h3>📍 Positioning</h3>
-                    <p>Gentle, preventive pediatric dental care focused on healthy development and reducing parental anxiety.</p>
-                </div>
-                <div class="overview-card">
-                    <h3>💬 Messaging Behavior</h3>
-                    <p>Gentle, friendly, and reassuring voice designed for parents
-Calm, warm, approachable
-CORE VOICE: Frame wellness through growth and development rather than "fixing" problems. Focus on reassurance and clarity to reduce parental anxiety. Emphasize preventive care and creating positive first experiences.</p>
-                </div>
-                <div class="overview-card">
-                    <h3>👥 Patient Base</h3>
-                    <p>Parents of young children (3-12)
-First-time pediatric patients
-Parents concerned about fear/comfort
-Prevention-minded families
-Parents seeking gentle care
-Families prioritizing child wellness</p>
-                </div>
-                <div class="overview-card">
-                    <h3>🏢 Example Clients</h3>
-                    <p>Sugarbugs Pediatric Dentistry</p>
-                </div>
-            </div>
-            <div class="tabs">
-                <div class="tab-buttons">
-                    <button class="tab-button active" onclick="showTab('typography')">Typography</button>
-                    <button class="tab-button" onclick="showTab('imagery')">Imagery</button>
-                    <button class="tab-button" onclick="showTab('layout')">Layout</button>
-                    <button class="tab-button" onclick="showTab('tone')">Visual Tone</button>
-                    <button class="tab-button" onclick="showTab('iconography')">Iconography</button>
-                    <button class="tab-button" onclick="showTab('texture')">Texture</button>
-                    <button class="tab-button" onclick="showTab('principles')">Design Principles</button>
-                    <button class="tab-button" onclick="showTab('avoid')">⚠️ Avoid</button>
-                </div>
-                <div id="typography" class="tab-pane active">
-                    <h4>Typography Guidelines</h4>
-                    <p>Rounded Sans-Serif: Nunito, Quicksand, Comfortaa
-Weight: Regular to Semi-Bold
-Style: Gentle, friendly, approachable
-Not overly childish but warm and inviting
-Parents are the primary readers</p>
-                </div>
-                <div id="imagery" class="tab-pane">
-                    <h4>Imagery Guidelines</h4>
-                    <p>• Happy children (3-12 years)
-• Parent-child interactions
-• Gentle dental visits
-• Natural, comfortable settings
-• Smiling, relaxed children
-• Preventive care visuals
-• Growth and development focus
-• Avoid anything scary or clinical</p>
-                </div>
-                <div id="layout" class="tab-pane">
-                    <h4>Layout Guidelines</h4>
-                    <p>• Gentle, organized layouts
-• Parent-friendly navigation
-• Clear information hierarchy
-• Welcoming space
-• Soft, reassuring design
-• Not too busy or overwhelming</p>
-                </div>
-                <div id="tone" class="tab-pane">
-                    <h4>Visual Tone</h4>
-                    <p>• Gentle and reassuring
-• Warm and welcoming
-• Preventive focus
-• Child-friendly but not childish
-• Parent-centered communication
-• Calm and peaceful</p>
-                </div>
-                <div id="iconography" class="tab-pane">
-                    <h4>Iconography Guidelines</h4>
-                    <p>• Soft, rounded icons
-• Growth symbols
-• Gentle imagery
-• Child-friendly but not cartoonish
-• Wellness indicators
-• Reassuring symbols</p>
-                </div>
-                <div id="texture" class="tab-pane">
-                    <h4>Texture Guidelines</h4>
-                    <p>• Soft, gentle textures
-• Natural materials
-• Warm, comforting finishes
-• Subtle patterns
-• Child-safe aesthetics
-• Avoid harsh or clinical textures</p>
-                </div>
-                <div id="principles" class="tab-pane">
-                    <h4>Design Principles</h4>
-                    <p>• Gentleness in all elements
-• Prevention over treatment
-• Parent reassurance
-• Child comfort focus
-• Development-centered
-• Reduce anxiety
-• Positive first experiences</p>
-                </div>
-                <div id="avoid" class="tab-pane">
-                    <h4>⚠️ What to Avoid</h4>
-                    <p>• Fear-based messaging
-• Scary dental imagery
-• Overly clinical aesthetics
-• Adult-focused design
-• Urgency or pressure
-• Problem-focused language
-• Anything intimidating</p>
-                </div>
-            </div>
-            <div class="links-section">
-                <h3>🔗 Resources & Examples</h3>
-                <div class="link-buttons">
-                    <a href="https://www.lajolladentalwellnesscenter.com/" target="_blank" class="link-button">🌐 View Examples in the Wild</a>
-                    <a href="https://pin.it/64ajhhyzO" target="_blank" class="link-button pinterest">📌 View Pinterest Moodboard</a>
-                </div>
-            </div>
-            <div class="navigation">
-                <a href="dr-b-nye.html" class="nav-button">← Previous Persona</a>
-                <a href="index.html" class="nav-button">Back to Visualization</a>
-                <a href="dr-a-sciuto.html" class="nav-button">Next Persona →</a>
-            </div>
-        </div>
-        <div class="footer"><strong>OrthoBoost</strong> Brand Persona System • Persona 9 of 10</div>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-logo">Ortho<span>Boost</span></a>
+  <a href="index.html" class="navbar-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to All Personas
+  </a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Persona 9 of 11</div>
+    <h1 class="hero-name">Dr. McStuffins</h1>
+    <p class="hero-subtitle"><span class="hero-accent-dot"></span>Pediatric Wellness Practice</p>
+  </div>
+</section>
+
+<main class="content">
+
+  <h2 class="section-title">Overview</h2>
+  <div class="overview-grid">
+    <div class="overview-card">
+      <div class="overview-card-label">Positioning</div>
+      <div class="overview-card-content">Gentle, preventive pediatric dental care focused on healthy development and reducing parental anxiety.</div>
     </div>
-    <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-    </script>
+    <div class="overview-card">
+      <div class="overview-card-label">Messaging Behavior</div>
+      <div class="overview-card-content">Gentle, friendly, and reassuring voice designed for parents. Frame wellness through growth and development rather than "fixing" problems. Focus on reassurance and clarity. Emphasize preventive care and positive first experiences.</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-card-label">Patient Base</div>
+      <div class="overview-card-content">Parents of young children (3–12), First-time pediatric patients, Parents concerned about fear/comfort, Prevention-minded families, Families prioritizing child wellness</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-card-label">Example Clients</div>
+      <div class="overview-card-content">Sugarbugs Pediatric Dentistry</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Design Guidelines</h2>
+  <hr class="section-divider">
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)"><span>Typography</span><svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="accordion-body"><div class="accordion-body-inner"><ul>
+        <li>Rounded Sans-Serif: Nunito, Quicksand, Comfortaa</li>
+        <li>Weight: Regular to Semi-Bold</li>
+        <li>Style: Gentle, friendly, approachable</li>
+        <li>Not overly childish - warm and inviting</li>
+        <li>Parents are the primary readers</li>
+      </ul></div></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)"><span>Imagery</span><svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="accordion-body"><div class="accordion-body-inner"><ul>
+        <li>Happy children (3–12 years)</li>
+        <li>Parent-child interactions</li>
+        <li>Gentle dental visits</li>
+        <li>Natural, comfortable settings</li>
+        <li>Smiling, relaxed children</li>
+        <li>Preventive care visuals</li>
+        <li>Growth and development focus</li>
+        <li>Avoid anything scary or clinical</li>
+      </ul></div></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)"><span>Layout</span><svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="accordion-body"><div class="accordion-body-inner"><ul>
+        <li>Gentle, organized layouts</li>
+        <li>Parent-friendly navigation</li>
+        <li>Clear information hierarchy</li>
+        <li>Welcoming space</li>
+        <li>Soft, reassuring design</li>
+        <li>Not too busy or overwhelming</li>
+      </ul></div></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)"><span>Visual Tone</span><svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="accordion-body"><div class="accordion-body-inner"><ul>
+        <li>Gentle and reassuring</li>
+        <li>Warm and welcoming</li>
+        <li>Preventive focus</li>
+        <li>Child-friendly but not childish</li>
+        <li>Parent-centered communication</li>
+        <li>Calm and peaceful</li>
+      </ul></div></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)"><span>Iconography</span><svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="accordion-body"><div class="accordion-body-inner"><ul>
+        <li>Soft, rounded icons</li>
+        <li>Growth symbols</li>
+        <li>Gentle imagery</li>
+        <li>Child-friendly but not cartoonish</li>
+        <li>Wellness indicators</li>
+        <li>Reassuring symbols</li>
+      </ul></div></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)"><span>Texture</span><svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="accordion-body"><div class="accordion-body-inner"><ul>
+        <li>Soft, gentle textures</li>
+        <li>Natural materials</li>
+        <li>Warm, comforting finishes</li>
+        <li>Subtle patterns</li>
+        <li>Child-safe aesthetics</li>
+        <li>Avoid harsh or clinical textures</li>
+      </ul></div></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)"><span>Design Principles</span><svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="accordion-body"><div class="accordion-body-inner"><ul>
+        <li>Gentleness in all elements</li>
+        <li>Prevention over treatment</li>
+        <li>Parent reassurance</li>
+        <li>Child comfort focus</li>
+        <li>Development-centered</li>
+        <li>Reduce anxiety</li>
+        <li>Positive first experiences</li>
+      </ul></div></div>
+    </div>
+    <div class="accordion-item avoid">
+      <button class="accordion-btn" onclick="toggleAccordion(this)"><span>What to Avoid</span><svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="accordion-body"><div class="accordion-body-inner"><ul>
+        <li>Fear-based messaging</li>
+        <li>Scary dental imagery</li>
+        <li>Overly clinical aesthetics</li>
+        <li>Adult-focused design</li>
+        <li>Urgency or pressure</li>
+        <li>Problem-focused language</li>
+        <li>Anything intimidating</li>
+      </ul></div></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Related Personas</h2>
+  <hr class="section-divider">
+  <div class="related-grid">
+    <a href="dr-d-houser.html" class="related-card">
+      <span class="related-dot" style="background: #f05252;"></span>
+      <div class="related-info"><div class="related-name">Dr. D. Houser</div><div class="related-subtitle">Pediatric Dentistry &amp; Orthodontics</div></div>
+      <svg class="related-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+    <a href="dr-m-rogers.html" class="related-card">
+      <span class="related-dot" style="background: #38a169;"></span>
+      <div class="related-info"><div class="related-name">Dr. M. Rogers</div><div class="related-subtitle">Family-Focused Community Ortho</div></div>
+      <svg class="related-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
+
+  <h2 class="section-title">Resources</h2>
+  <div class="resources-row">
+    <a href="https://www.lajolladentalwellnesscenter.com/" target="_blank" rel="noopener" class="resource-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View Examples in the Wild
+    </a>
+    <a href="https://pin.it/64ajhhyzO" target="_blank" rel="noopener" class="resource-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+      Pinterest Moodboard
+    </a>
+  </div>
+
+  <div class="nav-footer">
+    <a href="dr-b-nye.html" class="nav-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Previous
+    </a>
+    <a href="index.html" class="nav-btn nav-btn-center">Back to All Personas</a>
+    <a href="dr-a-sciuto.html" class="nav-btn">
+      Next
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
+
+</main>
+
+<footer class="page-footer">
+  OrthoBoost Brand Persona System - Persona 9 of 11
+</footer>
+
 </body>
 </html>
