@@ -11,10 +11,50 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #64748b; line-height: 1.6; }
 
-  /* NAV */
-  .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 0 2rem; height: 60px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; }
-  .navbar-logo { font-size: 1.1rem; font-weight: 800; color: #163055; text-decoration: none; letter-spacing: -0.02em; }
+  /* NAV - shared internal-tools nav */
+  .navbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .navbar-logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #163055;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
   .navbar-logo span { color: #29bbf6; }
+  .navbar-links {
+    display: flex;
+    gap: 1.75rem;
+    margin-left: auto;
+  }
+  .navbar-links a {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.15s;
+    padding: 0.4rem 0;
+    position: relative;
+  }
+  .navbar-links a:hover { color: #163055; }
+  .navbar-links a.active { color: #29bbf6; }
+  .navbar-links a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -19px;
+    height: 2px;
+    background: #29bbf6;
+  }
 
   /* HERO */
   .hero { background: #163055; padding: 4rem 2rem; text-align: center; }
@@ -55,13 +95,21 @@
   .page-footer { text-align: center; padding: 1.5rem 2rem; font-size: 0.8rem; color: #94a3b8; border-top: 1px solid #e2e8f0; background: #ffffff; }
 
   @media (max-width: 900px) { .persona-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px) { .persona-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) {
+    .persona-grid { grid-template-columns: 1fr; }
+    .navbar-links { gap: 1rem; }
+    .navbar-links a { font-size: 0.75rem; }
+  }
 </style>
 </head>
 <body>
 
 <nav class="navbar">
   <a href="index.html" class="navbar-logo">Ortho<span>Boost</span></a>
+  <div class="navbar-links">
+    <a href="index.html" class="active">Brand Personas</a>
+    <a href="https://jules-orthoboost.github.io/Seasonal-Ad-Library/index.html">Seasonal Library</a>
+  </div>
 </nav>
 
 <section class="hero">
@@ -288,7 +336,6 @@
   const cards = document.querySelectorAll('.persona-card');
   const countEl = document.getElementById('searchCount');
   const noResults = document.getElementById('noResults');
-  const grid = document.getElementById('personaGrid');
 
   input.addEventListener('input', function() {
     const query = this.value.trim().toLowerCase();
